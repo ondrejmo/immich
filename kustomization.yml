@@ -1,0 +1,50 @@
+---
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: immich
+
+resources:
+  - resources/machinelearning.yml
+  - resources/microservices.yml
+  - resources/postgres.yml
+  - resources/redis.yml
+  - resources/server.yml
+
+secretGenerator:
+  - name: immich-config
+    literals:
+      - DB_HOSTNAME=postgres.immich.svc
+      - DB_USERNAME=immich
+      - DB_PASSWORD=changeme
+      - DB_DATABASE_NAME=immich
+      - MACHINE_LEARNING_HOST=0.0.0.0
+      - MACHINE_LEARNING_PORT=3003
+      - IMMICH_MEDIA_LOCATION=/data/Immich
+      - IMMICH_METRICS=true
+      - MICROSERVICES_HOST=microservices.immich.svc
+      - MICROSERVICES_PORT=3002
+      - REDIS_HOSTNAME=redis.immich.svc
+      - REDIS_PORT=6379
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=changeme
+      - SERVER_PORT=3001
+      - TZ=Europe/Prague
+      - LOG_LEVEL=verbose
+      - UPLOAD_LOCATION=/data/Immich/upload
+  - name: postgres-config
+    literals:
+      - POSTGRES_DB=immich
+      - POSTGRES_USER=immich
+      - POSTGRES_PASSWORD=changeme
+      - PGDATA=/var/lib/postgresql/data/pgdata
+
+configMapGenerator:
+  - name: redis-config
+    files:
+      - redis.conf=files/redis.conf
+      - redis.acl=files/redis.acl
+
+generatorOptions:
+  disableNameSuffixHash: true
