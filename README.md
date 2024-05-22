@@ -4,7 +4,7 @@ An opinionated Immich deployment using Kustomization.
 
 ## Assumptions / Requirements
 
-These can be easily changed/replaced by appropriate substitutions.
+These can be easily changed/replaced by appropriate substitutions. Use Ctrl-H or similar to search and replace the code-typed keywords.
 
 - Intel GPU operator
 - The last tested Immich version: `v1.105.1`
