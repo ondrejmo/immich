@@ -43,7 +43,7 @@ spec:
               app.kubernetes.io/name: traefik
       ports:
         - protocol: TCP
-          port: 3001
+          port: 3003
     - from:
         - namespaceSelector:
             matchLabels:
@@ -52,8 +52,10 @@ spec:
             matchLabels:
               app.kubernetes.io/name: prometheus
       ports:
-        - name: metrics
+        - protocol: TCP
           port: 8081
+        - protocol: TCP
+          port: 8082
 
 ---
 
@@ -71,10 +73,11 @@ spec:
     app.kubernetes.io/part-of: immich
   ports:
     - name: http
-      port: 3001
-    - name: metrics
+      port: 3003
+    - name: metrics-api
       port: 8081
-
+    - name: metrics-micro
+      port: 8082
 ---
 
 apiVersion: apps/v1
@@ -111,20 +114,20 @@ spec:
                     - {key: app.kubernetes.io/part-of, operator: In, values: [immich]}
       containers:
         - name: server
-          image: ghcr.io/immich-app/immich-server:v1.105.1
-          command:
-            - ./start.sh
-          args:
-            - immich
+          image: ghcr.io/immich-app/immich-server:v1.106.2
           resources:
+            limits:
+              gpu.intel.com/i915: "1"
             requests:
               cpu: 10m
               memory: 128Mi
           ports:
             - name: http
-              containerPort: 3001
-            - name: metrics
+              containerPort: 3003
+            - name: metrics-api
               containerPort: 8081
+            - name: metrics-micro
+              containerPort: 8082
           envFrom:
             - secretRef:
                 name: immich-config
@@ -171,7 +174,7 @@ spec:
       kind: Rule
       services:
         - name: server
-          port: 3001
+          port: 3003
   tls:
     secretName: immich-certificate
 
@@ -188,4 +191,5 @@ spec:
       app.kubernetes.io/name: server
       app.kubernetes.io/part-of: immich
   endpoints:
-    - port: metrics
+    - port: metrics-api
+    - port: metrics-micro

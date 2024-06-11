@@ -7,7 +7,6 @@ namespace: immich
 
 resources:
   - resources/machinelearning.yml
-  - resources/microservices.yml
   - resources/postgres.yml
   - resources/redis.yml
   - resources/server.yml
@@ -19,17 +18,21 @@ secretGenerator:
       - DB_USERNAME=immich
       - DB_PASSWORD=changeme
       - DB_DATABASE_NAME=immich
-      - MACHINE_LEARNING_HOST=0.0.0.0
-      - MACHINE_LEARNING_PORT=3003
+      - IMMICH_HOST=0.0.0.0
+      - IMMICH_PORT=3003
       - IMMICH_MEDIA_LOCATION=/data/Immich
       - IMMICH_METRICS=true
-      - MICROSERVICES_HOST=microservices.immich.svc
-      - MICROSERVICES_PORT=3002
+      - IMMICH_API_METRICS=true
+      - IMMICH_HOST_METRICS=false
+      - IMMICH_IO_METRICS=true
+      - IMMICH_JOB_METRICS=true
+      - IMMICH_API_METRICS_PORT=8081
+      - IMMICH_MICROSERVICES_METRICS_PORT=8082
       - REDIS_HOSTNAME=redis.immich.svc
       - REDIS_PORT=6379
       - REDIS_USERNAME=default
       - REDIS_PASSWORD=changeme
-      - SERVER_PORT=3001
+      - SERVER_PORT=3003
       - TZ=Europe/Prague
       - LOG_LEVEL=verbose
       - UPLOAD_LOCATION=/data/Immich/upload

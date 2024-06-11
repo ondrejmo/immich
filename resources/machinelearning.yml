@@ -99,10 +99,8 @@ spec:
                     - {key: app.kubernetes.io/part-of, operator: In, values: [immich]}
       containers:
         - name: machinelearning
-          image: ghcr.io/immich-app/immich-machine-learning:v1.105.1
+          image: ghcr.io/immich-app/immich-machine-learning:v1.106.2
           resources:
-            limits:
-              gpu.intel.com/i915: "1"
             requests:
               cpu: 10m
               memory: 128Mi
