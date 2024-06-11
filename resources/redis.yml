@@ -77,7 +77,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: redis
-          image: redis:7.0.15
+          image: redis:7.2.5
           command: 
             - redis-server
           args:
