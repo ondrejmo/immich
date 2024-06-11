@@ -78,6 +78,8 @@ metadata:
 
 spec:
   revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: microservices
