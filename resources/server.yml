@@ -78,6 +78,7 @@ spec:
       port: 8081
     - name: metrics-micro
       port: 8082
+
 ---
 
 apiVersion: apps/v1
@@ -114,7 +115,7 @@ spec:
                     - {key: app.kubernetes.io/part-of, operator: In, values: [immich]}
       containers:
         - name: server
-          image: ghcr.io/immich-app/immich-server:v1.106.2
+          image: ghcr.io/immich-app/immich-server:v1.109.2
           resources:
             limits:
               gpu.intel.com/i915: "1"
