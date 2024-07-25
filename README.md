@@ -7,7 +7,7 @@ An opinionated Immich deployment using Kustomization.
 These can be easily changed/replaced by appropriate substitutions. Use Ctrl-H or similar to search and replace the code-typed keywords.
 
 - Intel GPU operator
-- The last tested Immich version: `v1.106.2`
+- The last tested Immich version: `v1.109.2`
 - Kubernetes `v1.29.5+` (tested on k3s with Traefik)
   - assumptions about kube-dns location and ingress controller location are based on this
 - A *StorageClass* named `longhorn`
