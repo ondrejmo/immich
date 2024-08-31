@@ -32,7 +32,7 @@ secretGenerator:
       - REDIS_PORT=6379
       - REDIS_USERNAME=default
       - REDIS_PASSWORD=changeme
-      - SERVER_PORT=3003
+      - SERVER_PORT=3001
       - TZ=Europe/Prague
       - LOG_LEVEL=verbose
       - UPLOAD_LOCATION=/data/Immich/upload

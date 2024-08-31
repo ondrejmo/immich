@@ -98,7 +98,7 @@ spec:
                     - {key: app.kubernetes.io/part-of, operator: In, values: [immich]}
       containers:
         - name: machinelearning
-          image: ghcr.io/immich-app/immich-machine-learning:v1.109.2
+          image: ghcr.io/immich-app/immich-machine-learning:v1.113.0
           resources:
             requests:
               cpu: 10m
