@@ -1,0 +1,61 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+
+spec:
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: server
+      app.kubernetes.io/part-of: immich
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: server
+        app.kubernetes.io/part-of: immich
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 1066
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchExpressions:
+                    - {key: app.kubernetes.io/name, operator: In, values: [server]}
+                    - {key: app.kubernetes.io/part-of, operator: In, values: [immich]}
+      containers:
+        - name: server
+          image: ghcr.io/immich-app/immich-server:v1.120.0
+          resources:
+            limits:
+              gpu.intel.com/i915: "1"
+            requests:
+              cpu: 10m
+              memory: 128Mi
+          ports:
+            - name: http
+              containerPort: 3003
+            - name: metrics-api
+              containerPort: 8081
+            - name: metrics-micro
+              containerPort: 8082
+          envFrom:
+            - secretRef:
+                name: immich-config
+          volumeMounts:
+            - name: data
+              mountPath: /data # /usr/src/app/upload
+      volumes:
+        - name: data
+          nfs:
+            server: "192.168.1.100"
+            path: /mnt/pictures

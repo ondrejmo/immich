@@ -6,11 +6,21 @@ kind: Kustomization
 namespace: immich
 
 resources:
-  - resources/immich.yml
-  - resources/machinelearning.yml
-  - resources/postgres.yml
-  - resources/redis.yml
-  - resources/server.yml
+  - templates/server/networkpolicy.yml
+  - templates/server/service.yml
+  - templates/server/deployment.yml
+  - templates/server/certificate.yml
+  - templates/server/servicemonitor.yml
+  - templates/server/ingressroute.yml
+  - templates/machinelearning/networkpolicy.yml
+  - templates/machinelearning/service.yml
+  - templates/machinelearning/deployment.yml
+  - templates/postgres/networkpolicy.yml
+  - templates/postgres/service.yml
+  - templates/postgres/statefulset.yml
+  - templates/redis/networkpolicy.yml
+  - templates/redis/service.yml
+  - templates/redis/statefulset.yml
 
 secretGenerator:
   - name: immich-config
@@ -22,11 +32,8 @@ secretGenerator:
       - IMMICH_HOST=0.0.0.0
       - IMMICH_PORT=3003
       - IMMICH_MEDIA_LOCATION=/data/Immich
-      - IMMICH_METRICS=true
-      - IMMICH_API_METRICS=true
-      - IMMICH_HOST_METRICS=false
-      - IMMICH_IO_METRICS=true
-      - IMMICH_JOB_METRICS=true
+      - IMMICH_TELEMETRY_INCLUDE=all
+      - IMMICH_TELEMETRY_EXCLUDE=host
       - IMMICH_API_METRICS_PORT=8081
       - IMMICH_MICROSERVICES_METRICS_PORT=8082
       - REDIS_HOSTNAME=redis.immich.svc

@@ -1,0 +1,15 @@
+---
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: server
+
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: server
+      app.kubernetes.io/part-of: immich
+  endpoints:
+    - port: metrics-api
+    - port: metrics-micro

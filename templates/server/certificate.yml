@@ -1,0 +1,15 @@
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: immich
+
+spec:
+  commonName: fotos.home.arpa
+  dnsNames:
+    - fotos.home.arpa
+  secretName: immich-certificate
+  issuerRef:
+    name: trusted-ca
+    kind: ClusterIssuer

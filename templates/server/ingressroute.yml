@@ -1,0 +1,23 @@
+---
+
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: immich
+  annotations:
+    link.argocd.argoproj.io/external-link: https://fotos.home.arpa
+    external-dns.alpha.kubernetes.io/target: "192.168.1.123"
+    external-dns.alpha.kubernetes.io/ttl: "300"
+
+spec:
+  entryPoints:
+    - websecure
+
+  routes:
+    - match: Host(`fotos.home.arpa`)
+      kind: Rule
+      services:
+        - name: server
+          port: 3003
+  tls:
+    secretName: immich-certificate
