@@ -34,7 +34,7 @@ spec:
                     - {key: app.kubernetes.io/part-of, operator: In, values: [immich]}
       containers:
         - name: server
-          image: ghcr.io/immich-app/immich-server:v1.120.0
+          image: ghcr.io/immich-app/immich-server:v1.120.1
           resources:
             limits:
               gpu.intel.com/i915: "1"
