@@ -20,16 +20,29 @@ spec:
         app.kubernetes.io/part-of: immich
     spec:
       automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 999
+        runAsNonRoot: true
+        runAsUser: 999
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: redis
-          image: redis:7.2.6
+          image: redis:7.4.2
           command:
             - redis-server
           args:
             - /etc/redis/redis.conf
+          securityContext:
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
           resources:
             requests:
-              cpu: 10m
+              cpu: 5m
               memory: 32Mi
           ports:
             - name: redis
@@ -64,4 +77,4 @@ spec:
         storageClassName: longhorn
         resources:
           requests:
-            storage: 256Mi
+            storage: 1Gi

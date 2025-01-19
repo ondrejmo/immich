@@ -20,12 +20,61 @@ spec:
     spec:
       automountServiceAccountToken: false
       securityContext:
+        fsGroup: 999
+        runAsNonRoot: true
         runAsUser: 999
         runAsGroup: 999
-        fsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: postgres-init
+          image: tensorchord/pgvecto-rs:pg16-v0.3.0
+          command:
+            - docker-enforce-initdb.sh
+          securityContext:
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 5m
+              memory: 32Mi
+          envFrom:
+            - secretRef:
+                name: postgres-config
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+            - name: shm
+              mountPath: /dev/shm
       containers:
         - name: postgres
-          image: tensorchord/pgvecto-rs:pg14-v0.2.0
+          image: tensorchord/pgvecto-rs:pg16-v0.3.0
+          command:
+            - postgres
+          args:
+            - -c
+            - shared_preload_libraries=vectors.so
+            - -c
+            - 'search_path="$$user", public, vectors'
+            - -c
+            - max_wal_size=2GB
+            - -c
+            - logging_collector=on
+            - -c
+            - wal_compression=on
+            - -c
+            - shared_buffers=512MB
+          securityContext:
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
           resources:
             requests:
               cpu: 10m
@@ -72,3 +121,7 @@ spec:
         resources:
           requests:
             storage: 4Gi
+
+# kubectl exec -it -n immich postgres-0 -- bash -c 'pg_dumpall -p 5432 -U foobar' > backup
+# kubectl cp -n immich backup postgres-0:/var/lib/postgresql/backup
+# kubectl exec -it -n immich postgres-0 -- bash -c 'psql -p 5432 -U foobar -d nyancat -f /var/lib/postgresql/backup'

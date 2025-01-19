@@ -34,13 +34,13 @@ spec:
                     - {key: app.kubernetes.io/part-of, operator: In, values: [immich]}
       containers:
         - name: server
-          image: ghcr.io/immich-app/immich-server:v1.120.1
+          image: ghcr.io/immich-app/immich-server:v1.124.2
           resources:
             limits:
               gpu.intel.com/i915: "1"
             requests:
               cpu: 10m
-              memory: 128Mi
+              memory: 512Mi
           ports:
             - name: http
               containerPort: 3003
